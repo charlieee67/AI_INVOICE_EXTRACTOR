@@ -275,4 +275,8 @@ public class Invoice {
     public void setItems(List<InvoiceItem> items) {
         this.items = items;
     }
+    public void addItem(InvoiceItem item) {
+        items.add(item);
+        item.setInvoice(this);
+    }
 }
