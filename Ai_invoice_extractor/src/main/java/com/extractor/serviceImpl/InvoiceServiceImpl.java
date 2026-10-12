@@ -20,7 +20,7 @@ import com.extractor.mapper.InvoiceMapper;
 import com.extractor.repositories.InvoiceRepository;
 import com.extractor.services.AiExtractionService;
 import com.extractor.services.InvoiceService;
-import com.extractor.services.PdfExtractionService;
+import com.extractor.services.PdfExtractionService;	
 import com.extractor.services.ValidationService;
 import com.extractor.util.LenientBigDecimalDeserializer;
 
@@ -126,6 +126,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         ValidationResult result = validationService.validate(invoice);   // check again, do not trust the stored flag
+        
         if (!result.passed()) {
             throw new ApiException(HttpStatus.CONFLICT,
                     "Fix these problems before confirming: " + String.join("; ", result.warnings()));
@@ -178,7 +179,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             log.warn("AI answer could not be parsed: {}", e.getClass().getSimpleName());
             throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT,
                     "AI returned data in an unexpected format. Please try again");
-        }
+        }	
         if (isBlank(request.invoiceNumber()) || isBlank(request.vendorName())) {
             throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Could not find the invoice number or vendor name in this PDF");
@@ -194,7 +195,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     private static ObjectMapper buildAiParser() {
-        SimpleModule amounts = new SimpleModule()
+        SimpleModule amounts = new SimpleModule()	
                 .addDeserializer(BigDecimal.class, new LenientBigDecimalDeserializer());
         return JsonMapper.builder()
                 .addModule(amounts)
